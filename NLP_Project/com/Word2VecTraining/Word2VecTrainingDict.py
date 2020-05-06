@@ -67,10 +67,192 @@ def train_build(train_set_seg_x_path, train_set_seg_y_path, test_set_seg_x, out_
         word_dict[word] = model[word]
     #dump_pkl(word_dict, out_path, overwrite=True)
 
+def embedding_layer(model_path):
+    model = KeyedVectors.load_word2vec_format(model_path, binary=True)
+    dictVocab = {}
+    vocab_path = './DataFile/vocab.txt'
+    with open(vocab_path, 'r', encoding='utf-8') as f:
+        for line in f:
+            if len(line) == 0:
+                continue
+            else:
+                line = line.strip()
+                # print(line)
+                line_tmp = line.split("\t")
+                dictVocab[line_tmp[0]] = line_tmp[1]
+    print(len(dictVocab))
+    # [[w1,w2,w3,.......],
+    #  [w1,w2,w3,.......],
+    #  ]
+    # 3 * 4
+    # 1-4  1-5
+    # 55808 * 256
+    # 1 - 55809  1 - 257
+    # matrix_one = [[0.0 for j in range(1, 257)] for i in range(1, 55809)]
+    # print(matrix_one)
+    # for w, v in dictVocab.items():
+    #     for word in model.vocab:
+    #         if w == word:
+    #             print('====line_index====', index)
+    #             id = model.vocab[w].index
+    #             vec = model.vectors[model.vocab[w].index]
+    #             # print(vec)
+    #             i = 0
+    #             for item in vec:
+    #                 matrix_one[int(v)][i] = item
+    #                 i = i + 1
+    #         else:
+    #             continue
+    # print("=====print=====a")
+    # print(len(matrix_one))
+    # print(len(matrix_one[0]))
+    # print(matrix_one[0][0])
+    # print('词向量维度: ',model.vectors.shape)
 
+# matrix = [[]]
+# res = [[]] * len(dictVocab)
+# matrix = [list() for i in range(len(dictVocab))]
+# a[0].append(1)
+# 55809 * 256
+# count = 0
+# fo = open("embedding_layer.txt", "w")
+# for w, v in dictVocab.items():
+#     for word in model.vocab:
+#         temp = []
+#         if w == word:
+#             print('====index_id==== ', model.vocab[w].index)
+#             vec = model.vectors[model.vocab[w].index]
+#             # print(vec)
+#             for item in vec:
+#                 temp.append(item)
+#             # print(temp)
+#             # print(len(temp))
+#             matrix[int(v)].append(temp)
+#             count = count + 1
+#         else:
+#             # print(int(v))
+#             # for i in range(256):
+#             #     temp.append(0.0)
+#             # matrix[int(v)].append(temp)
+#             continue
+# print("====print==== matrix")
+# print(count)
+# print(len(matrix))
+# print(matrix[0])
+# print('词向量维度: ',model.vectors.shape)
+
+#  5391 * 256
+# matrix_two = [list() for i in range(5391)]
+# count = 0
+# for w, v in dictVocab.items():
+#     for word in model.vocab:
+#         temp = []
+#         if w == word:
+#             vec = model.vectors[model.vocab[w].index]
+#             # print(vec)
+#             for item in vec:
+#                 temp.append(item)
+#             # print(temp)
+#             # print(len(temp))
+#             matrix_two[int(v)].append(temp)
+#             count = count + 1
+#         else:
+#             # print(int(v))
+#             for i in range(256):
+#                 temp.append(0.0)
+#             matrix_two[int(v)].append(temp)
+#             # continue
+# print("====print==== matrix")
+# print(count)
+# print(len(matrix_two))
+# print(matrix_two[0])
+print('词向量维度: ', model.vectors.shape)
+    '''
+        最后修正的emdeding——layer，有待确认
+        '''
+    matrix_res = [list() for i in range(5391)]
+    # a[0].append(1)
+    # 55809 * 256
+    # count = 1
+    # fo = open("embedding_layer_list.txt", "w")
+    # for w, v in dictVocab.items():
+    #     for word in model.vocab:
+    #         temp = []
+    #         if w == word:
+    #             print('====index_id==== ', model.vocab[w].index)
+    #             vec = model.vectors[model.vocab[w].index]
+    #             # print(vec)
+    #             for item in vec:
+    #                 temp.append(item)
+    #             # print(temp)
+    #             # print(len(temp))
+    #             matrix_res[int(model.vocab[w].index)].append(temp)
+    #             count = count + 1
+    #         else:
+    #             # print(int(v))
+    #             # for i in range(256):
+    #             #     temp.append(0.0)
+    #             # matrix[int(v)].append(temp)
+    #             continue
+    # print("====print==== matrix")
+    # print(count)
+    # print(len(matrix_res))
+    # print(matrix_res[0])
+    # print(matrix_res[1])
+    # print(matrix_res[3])
+    # for temp in matrix_res:
+    #     str_res = ""
+    #     for tmp in temp:
+    #         str_res = str(tmp) + ', '
+    #     print("===str=== ")
+    #     print(str_res)
+    #     # 返回结果是zd：['G20', '放假安排']
+    #     fo.write(str_res + '\n')
+    # print('词向量维度: ', model.vectors.shape)
+    # fo.close()
+    fo_one = open("embedding_layer_list_one.txt", "w")
+    matrix_one = [[0.0 for j in range(1, 257)] for i in range(1, 5392)]
+    print(matrix_one)
+    for w, v in dictVocab.items():
+        for word in model.vocab:
+            if w == word:
+                id = model.vocab[w].index
+                vec = model.vectors[model.vocab[w].index]
+                # print(vec)
+                i = 0
+                for item in vec:
+                    matrix_one[int(id)][i] = item
+                    i = i + 1
+            else:
+                continue
+    '''
+        embedding_matrix : 对应的训练的index : 和词向量
+        分别存入 embedding_layer_list, embedding_layer_list
+        '''
+print("=====print=====a")
+print(len(matrix_one))
+print(len(matrix_one[0]))
+print(matrix_one[0][0])
+for i in range(len(matrix_one)):
+    str_res_one = ""
+        for j in range(len(matrix_one[0])):
+            str_res_one += str(matrix_one[i][j]) + ','
+    fo_one.write(str_res_one + '\n')
+
+print('词向量维度: ', model.vectors.shape)
+fo_one.close()
+print('词向量维度: ',model.vectors.shape)
+
+
+def save_word_dict(vocab, save_path):
+    with open(save_path, 'w', encoding='utf-8') as f:
+        for line in vocab:
+            w, i = line
+            f.write("%s\t%d\n" % (w, i))
 if __name__ == '__main__':
-    train_build('./DataFile/train_set_seg_x.txt',
-          './DataFile/train_set_seg_y.txt',
-          './DataFile/test_set_seg_x.txt',
-          out_path='./DataFile/word2vec.txt',
-          sentence_path='./DataFile/sentences.txt',)
+#    train_build('./DataFile/train_set_seg_x.txt',
+#          './DataFile/train_set_seg_y.txt',
+#          './DataFile/test_set_seg_x.txt',
+#          out_path='./DataFile/word2vec.txt',
+#          sentence_path='./DataFile/sentences.txt',)
+    embedding_layer('./w2v_sg.bin')
