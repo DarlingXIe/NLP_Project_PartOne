@@ -81,6 +81,24 @@ def embedding_layer(model_path):
                 line_tmp = line.split("\t")
                 dictVocab[line_tmp[0]] = line_tmp[1]
     print(len(dictVocab))
+    vocab_list = [word for word, index in dictVocab.items()]
+    print(len(vocab_list))
+    print('词向量维度: ', model.vectors.shape)
+    word_index = {" ": 0} # 建立词表
+    word_verctor = {} # 初始化 字典
+    embedding_matrix = np.zeros((len(vocab_list) + 1, 256))
+    for i in range(len(vocab_list)):
+        # print(i)
+        word = vocab_list[i]
+        word_index[word] = i + 1
+        for word_cab in model.vocab:
+            if word == word_cab:
+                word_verctor[word] = model.wv[word]
+                embedding_matrix[i + 1] = model.wv[word]
+            else:
+                continue
+    print(embedding_matrix[1][0])
+    return embedding_matrix
     # [[w1,w2,w3,.......],
     #  [w1,w2,w3,.......],
     #  ]
@@ -88,12 +106,14 @@ def embedding_layer(model_path):
     # 1-4  1-5
     # 55808 * 256
     # 1 - 55809  1 - 257
+    # dic 中文 index
+    # 训练的词向量 中文 词向量
+    # []
     # matrix_one = [[0.0 for j in range(1, 257)] for i in range(1, 55809)]
     # print(matrix_one)
     # for w, v in dictVocab.items():
     #     for word in model.vocab:
     #         if w == word:
-    #             print('====line_index====', index)
     #             id = model.vocab[w].index
     #             vec = model.vectors[model.vocab[w].index]
     #             # print(vec)
@@ -108,20 +128,22 @@ def embedding_layer(model_path):
     # print(len(matrix_one[0]))
     # print(matrix_one[0][0])
     # print('词向量维度: ',model.vectors.shape)
-
-# matrix = [[]]
-# res = [[]] * len(dictVocab)
-# matrix = [list() for i in range(len(dictVocab))]
-# a[0].append(1)
-# 55809 * 256
-# count = 0
-# fo = open("embedding_layer.txt", "w")
-# for w, v in dictVocab.items():
-#     for word in model.vocab:
-#         temp = []
-#         if w == word:
-#             print('====index_id==== ', model.vocab[w].index)
-#             vec = model.vectors[model.vocab[w].index]
+    #
+    # for w, v in dictVocab.items():
+    #     model.vocab[]
+    # matrix = [[]]
+    # res = [[]] * len(dictVocab)
+    # matrix = [list() for i in range(len(dictVocab))]
+    # a[0].append(1)
+    # 55809 * 256
+    # count = 0
+    # fo = open("embedding_layer.txt", "w")
+    # for w, v in dictVocab.items():
+    #     for word in model.vocab:
+    #         temp = []
+    #         if w == word:
+    #             print('====index_id==== ', model.vocab[w].index)
+    #             vec = model.vectors[model.vocab[w].index]
 #             # print(vec)
 #             for item in vec:
 #                 temp.append(item)
@@ -166,82 +188,82 @@ def embedding_layer(model_path):
 # print(count)
 # print(len(matrix_two))
 # print(matrix_two[0])
-print('词向量维度: ', model.vectors.shape)
+# print('词向量维度: ', model.vectors.shape)
+'''
+    最后修正的emdeding——layer，有待确认
     '''
-        最后修正的emdeding——layer，有待确认
+        # matrix_res = [list() for i in range(5391)]
+        # a[0].append(1)
+        # 55809 * 256
+        # count = 1
+        # fo = open("embedding_layer_list.txt", "w")
+        # for w, v in dictVocab.items():
+        #     for word in model.vocab:
+        #         temp = []
+        #         if w == word:
+        #             print('====index_id==== ', model.vocab[w].index)
+        #             vec = model.vectors[model.vocab[w].index]
+        #             # print(vec)
+        #             for item in vec:
+        #                 temp.append(item)
+        #             # print(temp)
+        #             # print(len(temp))
+        #             matrix_res[int(model.vocab[w].index)].append(temp)
+        #             count = count + 1
+        #         else:
+        #             # print(int(v))
+        #             # for i in range(256):
+        #             #     temp.append(0.0)
+        #             # matrix[int(v)].append(temp)
+        #             continue
+        # print("====print==== matrix")
+        # print(count)
+        # print(len(matrix_res))
+        # print(matrix_res[0])
+        # print(matrix_res[1])
+        # print(matrix_res[3])
+        # for temp in matrix_res:
+        #     str_res = ""
+        #     for tmp in temp:
+        #         str_res = str(tmp) + ', '
+        #     print("===str=== ")
+        #     print(str_res)
+        #     # 返回结果是zd：['G20', '放假安排']
+        #     fo.write(str_res + '\n')
+        # print('词向量维度: ', model.vectors.shape)
+        # fo.close()
+        # fo_one = open("embedding_layer_list_one.txt", "w")
+        # matrix_one = [[0.0 for j in range(1, 257)] for i in range(1, 5392)]
+        # print(matrix_one)
+        # for w, v in dictVocab.items():
+        #     for word in model.vocab:
+        #         if w == word:
+        #             id = model.vocab[w].index
+        #             vec = model.vectors[model.vocab[w].index]
+        #             # print(vec)
+        #             i = 0
+        #             for item in vec:
+        #                 matrix_one[int(id)][i] = item
+        #                 i = i + 1
+        #         else:
+        #             continue
         '''
-    matrix_res = [list() for i in range(5391)]
-    # a[0].append(1)
-    # 55809 * 256
-    # count = 1
-    # fo = open("embedding_layer_list.txt", "w")
-    # for w, v in dictVocab.items():
-    #     for word in model.vocab:
-    #         temp = []
-    #         if w == word:
-    #             print('====index_id==== ', model.vocab[w].index)
-    #             vec = model.vectors[model.vocab[w].index]
-    #             # print(vec)
-    #             for item in vec:
-    #                 temp.append(item)
-    #             # print(temp)
-    #             # print(len(temp))
-    #             matrix_res[int(model.vocab[w].index)].append(temp)
-    #             count = count + 1
-    #         else:
-    #             # print(int(v))
-    #             # for i in range(256):
-    #             #     temp.append(0.0)
-    #             # matrix[int(v)].append(temp)
-    #             continue
-    # print("====print==== matrix")
-    # print(count)
-    # print(len(matrix_res))
-    # print(matrix_res[0])
-    # print(matrix_res[1])
-    # print(matrix_res[3])
-    # for temp in matrix_res:
-    #     str_res = ""
-    #     for tmp in temp:
-    #         str_res = str(tmp) + ', '
-    #     print("===str=== ")
-    #     print(str_res)
-    #     # 返回结果是zd：['G20', '放假安排']
-    #     fo.write(str_res + '\n')
+            embedding_matrix : 对应的训练的index : 和词向量
+            分别存入 embedding_layer_list, embedding_layer_list
+            '''
+    # print("=====print=====a")
+    # print(len(matrix_one))
+    # print(len(matrix_one[0]))
+    # print(matrix_one[0][0])
+    # for i in range(len(matrix_one)):
+    #     str_res_one = ""
+    #     for j in range(len(matrix_one[0])):
+    #         str_res_one += str(matrix_one[i][j]) + ','
+    #     fo_one.write(str_res_one + '\n')
+    #
     # print('词向量维度: ', model.vectors.shape)
-    # fo.close()
-    fo_one = open("embedding_layer_list_one.txt", "w")
-    matrix_one = [[0.0 for j in range(1, 257)] for i in range(1, 5392)]
-    print(matrix_one)
-    for w, v in dictVocab.items():
-        for word in model.vocab:
-            if w == word:
-                id = model.vocab[w].index
-                vec = model.vectors[model.vocab[w].index]
-                # print(vec)
-                i = 0
-                for item in vec:
-                    matrix_one[int(id)][i] = item
-                    i = i + 1
-            else:
-                continue
-    '''
-        embedding_matrix : 对应的训练的index : 和词向量
-        分别存入 embedding_layer_list, embedding_layer_list
-        '''
-print("=====print=====a")
-print(len(matrix_one))
-print(len(matrix_one[0]))
-print(matrix_one[0][0])
-for i in range(len(matrix_one)):
-    str_res_one = ""
-        for j in range(len(matrix_one[0])):
-            str_res_one += str(matrix_one[i][j]) + ','
-    fo_one.write(str_res_one + '\n')
-
-print('词向量维度: ', model.vectors.shape)
-fo_one.close()
-print('词向量维度: ',model.vectors.shape)
+    # fo_one.close()
+    # print('词向量维度: ',model.vectors.shape)
 
 
 def save_word_dict(vocab, save_path):
